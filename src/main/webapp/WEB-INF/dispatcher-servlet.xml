@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.mvcc.control"/>
+
+    <bean class="com.mvcc.vo.Power" name="pa">
+        <property name="value" value="aaa"></property>
+        <property name="type" value="aaaa"></property>
+    </bean>
+
+    <!--创建数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+
+        <property name="driverClass" value="org.mariadb.jdbc.Driver" />
+
+        <property name="jdbcUrl" value="jdbc:mariadb://localhost:3306/data_test" />
+
+        <property name="user" value="oukele"/>
+
+        <property name="password" value="oukele"/>
+    </bean>
+
+    <!-- 配置mybatis  -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据源的实例化 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 映射 DML 语法 -->
+        <property name="mapperLocations" value="classpath:mapper_*.xml"/>
+    </bean>
+    <!-- 映射 数据访问层 ( dao ) 中的接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.oukele.bookshop_ssm.dao"/>
+    </bean>
+
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            &lt;!&ndash; 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 &ndash;&gt;
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean id="jsonConverter"
+                      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            &lt;!&ndash; 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 &ndash;&gt;
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>-->
+    <!-- 开启注解 -->
+    <mvc:annotation-driven/>
+    <!--<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="104857600" />
+        <property name="maxInMemorySize" value="4096" />
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>-->
+
+</beans>
